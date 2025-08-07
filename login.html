@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Management</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #1e1e1e; /* Dark background */
+    color: #ccc; /* Light text for contrast */
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.account-management {
+    width: 100%;
+    max-width: 500px;
+    background-color: #2a2a2a; /* Darker background for card */
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #e8e4df; /* Goldish text color for contrast */
+}
+
+.profile {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#profile-pic {
+    border-radius: 50%;
+    border: 3px solid #0d0c09; /* Goldish border for profile picture */
+    cursor: pointer;
+}
+
+button {
+    background-color: #ac8669; /* Goldish button */
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    width: 100%;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #878786; /* Slightly darker gold on hover */
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #aaa;
+}
+
+input[type="text"], input[type="password"], textarea {
+    width: 100%;
+    padding: 10px;
+    background-color: #333; /* Dark input background */
+    border: 1px solid #444; /* Slightly lighter border */
+    border-radius: 5px;
+    color: #ccc; /* Lighter text inside input */
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: #f1c232; /* Gold border on focus */
+}
+
+textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+/* Eye Icon */
+.password-field {
+    position: relative;
+}
+
+.eye-icon {
+    position: absolute;
+    top: 55%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 18px;
+    color:none; /* Gold icon color */
+}
+
+#logout-btn, #create-account {
+    background-color: #000000;
+    color:white; /* Red for logout/delete buttons */
+}
+
+#logout-btn:hover, #create-account:hover {
+    background-color: #000000;
+    color:white; /* Darker red on hover */
+}
+/* Basic modal styling */
+#switch-account-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it appears on top */
+}
+
+/* Modal content box */
+#switch-account-modal > div {
+    background-color: #4b4131; /* Dark brown background */
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%; /* Make the modal responsive by setting width to 90% */
+    max-width: 500px; /* Max width for larger screens */
+    color: #000000; /* White text for contrast */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for 3D effect */
+    overflow: hidden; /* Hide default scrollbars */
+    position: relative;
+}
+
+/* Close Button with Icon */
+.close-btn {
+    background: none;
+    border: none;
+    color: rgb(0, 0, 0);
+    color:#4b4131;
+    font-size: 1.5em;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+/* Title inside the modal */
+#switch-account-modal h3 {
+    margin: 0;
+    padding-bottom: 15px;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+/* Account list container */
+#account-list {
+    margin-bottom: 20px;
+    max-height: 300px;
+    overflow-y: scroll; /* Allow scrolling */
+}
+
+/* Hide the scrollbar but keep the scrolling functionality */
+#account-list::-webkit-scrollbar {
+    width: 0px; /* Hide the scrollbar */
+    background: transparent; /* Make the background transparent */
+}
+
+/* Each account item */
+.account-item {
+    margin-bottom: 10px;
+    position: relative;
+    padding-right: 30px; /* Space for the delete icon */
+}
+
+/* Account switch button */
+.switch-account-btn {
+    background-color: #6a4e3d; /* Medium brown background for buttons */
+    color: white;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    font-size: 1.1em;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover effect for account switch buttons */
+.switch-account-btn:hover {
+    background-color: #8a6749; /* Lighter brown when hovered */
+}
+
+/* Delete Icon inside account item */
+.delete-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+    color: #d9534f;
+    font-size: 1.2em;
+}
+
+/* Hover effect for delete icon */
+.delete-icon:hover {
+    color: #c9302c;
+}
+
+/* Button for closing the modal */
+#switch-account-modal button {
+    background-color: #d98d4f; /* Red background for close button */
+    color: rgb(0, 0, 0);
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1.1em;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover effect for close button */
+#switch-account-modal button:hover {
+    background-color: #a8a7a7;
+}
+
+/* Responsive Styles for Smaller Screens */
+@media (max-width: 600px) {
+    #switch-account-modal > div {
+        width: 95%; /* Adjust width for small screens */
+        padding: 10px;
+    }
+
+    .switch-account-btn, #switch-account-modal button {
+        font-size: 1em; /* Adjust button size for smaller screens */
+    }
+
+    .close-btn {
+        font-size: 1.2em; /* Adjust close button size */
+    }
+
+    h3 {
+        font-size: 1.3em; /* Adjust heading size for smaller screens */
+    }
+}
+/* Close button */
+#switch-account-modal button {
+    background-color: #d9924f;
+    color: rgb(0, 0, 0);
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1.1em;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover effect for the close button */
+#switch-account-modal button:hover {
+    background-color: #878686;
+}
+
+#account-context-menu {
+    position: absolute;
+    background-color: #333; /* Dark background for context menu */
+    border: 1px solid #444;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    padding: 0;
+    list-style-type: none;
+}
+
+#account-context-menu ul {
+    padding: 0;
+    margin: 0;
+}
+
+#account-context-menu li {
+    padding: 10px 20px;
+    cursor: pointer;
+    color: #ccc;
+}
+
+#account-context-menu li:hover {
+    background-color: #444;
+}
+<style>
+    /* Coupon Code Section Styles */
+    .coupon-code-section {
+        background-color: #2a2a2a; /* Dark background to match the rest of the page */
+        padding: 20px;
+        border-radius: 8px;
+        margin-top: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .coupon-code-section h3 {
+        color: #e8e4df; /* Light goldish color for the header */
+        font-size: 18px;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .coupon-code {
+        display: block;
+        background-color: #ac8669; /* Goldish background to match buttons */
+        color: black;
+        font-size: 16px;
+        font-weight: bold;
+        padding: 10px;
+        text-align: center;
+        border-radius: 5px;
+        margin-top: 10px;
+        width: fit-content;
+        margin-left: auto;
+        margin-right: auto;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    
+</style>
+<body>
+<!-- Profile Card -->
+<div class="account-management">
+    <h2>Account Management</h2>
+
+    <!-- Profile Section -->
+    <div class="profile">
+        <img id="profile-pic" src="default-profile.png" alt="Profile Picture" width="100" height="100">
+        <input type="file" id="upload-photo" accept="image/*" hidden>
+        <button onclick="document.getElementById('upload-photo').click();">Change Profile Picture</button>
+    </div>
+
+    <!-- User Information -->
+    <div class="user-info">
+        <label>Username: </label>
+        <input type="text" id="username" value="" required>
+    </div>
+
+    <div class="user-info">
+        <label>Email: </label>
+        <input type="text" id="email" value="" required>
+    </div>
+
+    <div class="user-info">
+        <label>Phone Number: </label>
+        <input type="text" id="phone" value="" required>
+    </div>
+
+    <div class="user-info">
+        <label>Address: </label>
+        <textarea id="address" required></textarea>
+    </div>
+
+    <div class="user-info password-field">
+        <label>Password: </label>
+        <input type="password" id="password" value="" required>
+        <span class="eye-icon" onclick="togglePasswordVisibility()"><i class="bx bx-show"></i></span>
+    </div>
+
+    <!-- Coupon Code Section (Integrated into the Profile Card) -->
+    <div class="coupon-code-section">
+        <h3>Your Coupon Code</h3>
+        <span class="coupon-code" id="coupon-code"></span>
+    </div>
+
+    <!-- Buttons -->
+    <button id="save-changes" onclick="saveChanges()">Save Changes</button>
+    <button id="delete-account" onclick="deleteAccount()">Delete Account</button>
+    <button id="logout-btn">Log Out</button>
+    <button id="create-account">Create Another Account</button>
+
+<div id="switch-account-modal" style="display: visible;">
+    <div>
+        <h3>Select an Account to Switch</h3>
+        <div id="account-list"></div>
+        <button onclick="closeSwitchAccountModal()">Close</button>
+
+    </div>
+</div>
+<button id="switch-account-button">Switch Account</button>
+
+</div>
+<script>
+
+    // Assuming you want a fixed coupon code for all users
+    document.getElementById('coupon-code').textContent = 'DISCOUNT5'; // You can generate this dynamically
+
+    // Retrieve the logged-in user and all users from localStorage
+    const loggedInUser = localStorage.getItem('loggedInUser');
+    let users = JSON.parse(localStorage.getItem('users')) || [];
+
+    // If no user is logged in, redirect to the login page
+    if (!loggedInUser) {
+        window.location.href = "login.html";
+    }
+
+    // Find the current user's data
+    let currentUser = users.find(user => user.username === loggedInUser);
+
+    // Ensure the user data is available before attempting to populate the form
+    if (currentUser) {
+    // Fallback to default profile picture if no profilePic is set
+    const profilePic = currentUser.profilePic ? currentUser.profilePic : 'default-profile.png';
+    document.getElementById('profile-pic').src = profilePic;
+
+    document.getElementById('username').value = currentUser.username || '';
+    document.getElementById('email').value = currentUser.email || '';
+    document.getElementById('phone').value = currentUser.phone || '';
+    document.getElementById('address').value = currentUser.address || '';
+    document.getElementById('password').value = currentUser.password || '';
+}
+
+
+    // Handle profile picture upload
+    document.getElementById('upload-photo').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const base64Image = e.target.result;
+                document.getElementById('profile-pic').src = base64Image;
+                currentUser.profilePic = base64Image;
+                localStorage.setItem('users', JSON.stringify(users));
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Toggle password visibility
+    function togglePasswordVisibility() {
+        const passwordField = document.getElementById('password');
+        const icon = document.querySelector('.eye-icon i');
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            icon.classList.replace('bx-show', 'bx-hide');
+        } else {
+            passwordField.type = 'password';
+            icon.classList.replace('bx-hide', 'bx-show');
+        }
+    }
+
+    // Save changes to the user's profile
+    function saveChanges() {
+        const updatedUsername = document.getElementById('username').value.trim();
+        const updatedEmail = document.getElementById('email').value.trim();
+        const updatedPhone = document.getElementById('phone').value.trim();
+        const updatedAddress = document.getElementById('address').value.trim();
+        const updatedPassword = document.getElementById('password').value.trim();
+
+        if (!updatedUsername || !updatedEmail || !updatedPhone || !updatedAddress || !updatedPassword) {
+            alert('Please fill in all fields.');
+            return;
+        }
+
+        // Check for username conflicts if the username has been changed
+        if (updatedUsername !== currentUser.username) {
+            const usernameExists = users.some(user => user.username.toLowerCase() === updatedUsername.toLowerCase());
+            if (usernameExists) {
+                alert('Username is already taken. Please choose another one.');
+                return;
+            }
+        }
+
+        // Update the user's data
+        currentUser.username = updatedUsername;
+        currentUser.email = updatedEmail;
+        currentUser.phone = updatedPhone;
+        currentUser.address = updatedAddress;
+        currentUser.password = updatedPassword;
+
+        // Update the logged-in user if the username has changed
+        if (updatedUsername !== loggedInUser) {
+            localStorage.setItem('loggedInUser', updatedUsername);
+        }
+
+        // Save the updated users array to localStorage
+        localStorage.setItem('users', JSON.stringify(users));
+        alert('Changes saved successfully!');
+    }
+
+    // Delete the current user's account
+    function deleteAccount() {
+        if (confirm("Are you sure you want to delete your account?")) {
+            const index = users.findIndex(user => user.username === loggedInUser);
+            if (index !== -1) {
+                users.splice(index, 1); // Remove the user from the array
+                localStorage.setItem('users', JSON.stringify(users)); // Save the updated users array
+                localStorage.removeItem('loggedInUser'); // Clear the logged-in user
+                alert('Your account has been deleted!');
+                window.location.href = "signup.html";
+            }
+        }
+    }
+
+    // Handle log out
+    document.getElementById('logout-btn').addEventListener('click', function () {
+        localStorage.removeItem('loggedInUser');
+        window.location.href = "login.html";
+    });
+
+    // Handle "Create Another Account" button
+    document.getElementById('create-account').addEventListener('click', function () {
+        localStorage.removeItem('loggedInUser');
+        window.location.href = "signup.html";
+    });
+
+    // Handle account switching
+   // Handle account switching
+// Right-click context menu
+let contextMenu;
+document.addEventListener('DOMContentLoaded', function () {
+    // Create context menu element
+    contextMenu = document.createElement('div');
+    contextMenu.id = 'account-context-menu';
+    contextMenu.style.display = 'none';
+    contextMenu.innerHTML = `
+        <ul>
+            <li id="menu-switch">Switch to this Account</li>
+            <li id="menu-delete">Delete this Account</li>
+            <li id="menu-info">View Account Info</li>
+        </ul>
+    `;
+    document.body.appendChild(contextMenu);
+
+    // Hide menu on click elsewhere
+    document.addEventListener('click', function () {
+        contextMenu.style.display = 'none';
+    });
+});
+
+// Handle account switching
+// Handle account switching when the "Switch Account" button is clicked
+document.getElementById('switch-account-button').addEventListener('click', function () {
+    // Ensure we have users to switch between
+    if (users.length > 0) {
+        let accountListHTML = '';
+        users.forEach(user => {
+            accountListHTML += `
+                <div class="account-item">
+                    <button class="switch-account-btn" data-username="${user.username}">
+                        ${user.username}
+                    </button>
+                </div>
+            `;
+        });
+        document.getElementById('account-list').innerHTML = accountListHTML;
+
+        // Display the modal
+        document.getElementById('switch-account-modal').style.display = 'block';
+
+        // Add event listeners to each account switch button
+        document.querySelectorAll('.switch-account-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const newUsername = this.getAttribute('data-username');
+                localStorage.setItem('loggedInUser', newUsername); // Update the logged-in user
+                displaySwitchMessage(`Switched to account: ${newUsername}`);
+                window.location.reload(); // Reload to reflect the account switch
+            });
+        });
+    } else {
+        alert('No other accounts available to switch.');
+    }
+});
+
+// Function to close the switch account modal
+function closeSwitchAccountModal() {
+    document.getElementById('switch-account-modal').style.display = 'none';
+}
+
+// Function to display a switch message with a dismissible cross icon
+function displaySwitchMessage(message) {
+    const alertBox = document.createElement('div');
+    alertBox.classList.add('switch-alert');
+    alertBox.innerHTML = `
+        <span>${message}</span>
+        <span class="close-alert" onclick="this.parentElement.remove();">&times;</span>
+    `;
+    document.body.appendChild(alertBox);
+}
+</script>
+
+</body>
+</html>

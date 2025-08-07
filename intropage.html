@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XFUNCTIONAL - Online Shop</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: 'Arial', sans-serif;
+
+    }
+
+    .container {
+      width: 100%;
+      height: 100%;
+      background-image: url('IMG_2099.jpeg');
+      background-size: cover;
+      background-position: center;
+      position: fixed;
+    }
+
+    .balls-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 80%;  /* Limit the width of the movement area */
+      height: 80%;  /* Limit the height of the movement area */
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .ball {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: #8B5E3C;
+      animation: moveBall 6s ease-in-out infinite;
+    }
+
+    .lighting-ball {
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background-color: #FFD700; /* Bright yellow color */
+      box-shadow: 0 0 15px 5px #FFD700; /* Glowing effect */
+      animation: lightingMove 4s ease-in-out infinite;
+    }
+
+    @keyframes moveBall {
+      0% { transform: translate(0, 0); }
+      25% { transform: translate(-100px, 50px); }
+      50% { transform: translate(80px, -100px); }
+      75% { transform: translate(50px, 80px); }
+      100% { transform: translate(0, 0); }
+    }
+
+    @keyframes lightingMove {
+      0% { transform: translate(0, 0); }
+      50% { transform: translate(-80px, -60px); }
+      100% { transform: translate(0, 0); }
+    }
+
+    nav, footer {
+      position: absolute;
+      padding: 8em;
+      height: 20px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      background-color: rgba(48, 27, 3, 0.5);
+      color: rgba(237, 196, 143, 0.8);
+    }
+
+    footer {
+      bottom: 0;
+    }
+
+    nav > div, footer > div {
+      padding: 1.5em;
+      cursor: pointer;
+      border-radius: 20px 30px;
+      background-color: rgba(48, 27, 3, 0.5);
+      color: rgba(237, 196, 143, 0.8);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
+
+    nav > div i, footer > div i {
+      margin-right: 0.5em;
+      font-size: 1.5em;
+    }
+
+    nav > div:hover, footer > div:hover {
+      background-color: rgba(237, 196, 143, 0.8);
+      transform: scale(1.1);
+    }
+
+    .placeholder {
+      font-size: 60px;
+      color: rgb(191, 142, 99);
+      font-weight: bold;
+      text-align: center;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    }
+
+    .header {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      text-align: center;
+    }
+
+    p {
+      font-size: 16px;
+      color: black;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    body {
+      transition: all 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="balls-container">
+      <!-- These are the moving brown balls centered -->
+      <div class="ball" style="top: 50%; left: 50%; animation-duration: 5s;"></div>
+      <div class="ball" style="top: 40%; left: 60%; animation-duration: 4s;"></div>
+      <div class="ball" style="top: 60%; left: 40%; animation-duration: 6s;"></div>
+      <div class="ball" style="top: 45%; left: 35%; animation-duration: 3s;"></div>
+      <div class="ball" style="top: 55%; left: 70%; animation-duration: 7s;"></div>
+
+      <!-- These are the smaller glowing lighting balls -->
+      <div class="lighting-ball" style="top: 60%; left: 30%; animation-duration: 3s;"></div>
+      <div class="lighting-ball" style="top: 50%; left: 80%; animation-duration: 4s;"></div>
+      <div class="lighting-ball" style="top: 45%; left: 40%; animation-duration: 5s;"></div>
+      <div class="lighting-ball" style="top: 35%; left: 60%; animation-duration: 6s;"></div>
+      <div class="lighting-ball" style="top: 65%; left: 50%; animation-duration: 7s;"></div>
+      <!-- Add more glowing balls as needed -->
+    </div>
+
+    <nav>
+      <div id="item-1"><i class="fas fa-info-circle"></i> About</div>
+      <div id="item-2"><i class="fas fa-lightbulb"></i> Ideas</div>
+    </nav>
+    <footer>
+      <div id="item-3"><i class="fas fa-truck"></i> Delivery</div>
+      <div id="item-4"><i class="fas fa-book"></i> Impact</div>
+    </footer>
+    <div class="header">
+      <div class="placeholder">WELCOME</div>
+      <p id="subheader">to the XFUNCTIONAL tools shop © 2025</p>
+    </div>
+    <div style="height: 2000px;"></div>
+    <div id="load-trigger"></div>
+    
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        // Set up an IntersectionObserver to load sec.html when the user scrolls near the bottom
+        const loadTrigger = document.getElementById('load-trigger');
+        const observer = new IntersectionObserver(entries => {
+          if (entries[0].isIntersecting) {
+            loadSecContent();
+            observer.disconnect(); // Stop observing after content is loaded
+          }
+        }, { threshold: 1.0 }); // When 100% of the trigger is in view
+    
+        observer.observe(loadTrigger);
+    
+        function loadSecContent() {
+          // Check if sec content is already loaded
+          if (document.getElementById('sec-content')) return;
+    
+          // Create a new div to hold the sec.html content
+          fetch('sec.html')
+            .then(response => response.text())
+            .then(data => {
+              // Append the fetched content at the bottom of the page
+              const secContent = document.createElement('div');
+              secContent.innerHTML = data;
+              secContent.classList.add('sec-content');
+              secContent.id = 'sec-content';
+              document.body.appendChild(secContent);
+            })
+            .catch(error => console.error('Error loading sec.html:', error));
+        }
+      });
+  
+    // JavaScript remains the same as before
+    const subHeaders = [
+      "Inspire trust by providing useful info.",
+      "Innovation through endless possibilities.",
+      "Fast and reliable service, every time.",
+      "Empowering decisions with expertise."
+    ];
+
+    const items = document.querySelectorAll('#item-1, #item-2, #item-3, #item-4');
+
+    items.forEach((item, index) => {
+      item.addEventListener('click', () => {
+        switch (index) {
+          case 0:
+            window.location.href = 'about.html';
+            break;
+          case 1:
+            window.location.href = 'ideas.html';
+            break;
+          case 2:
+            window.location.href = 'deliveryc.html';
+            break;
+          case 3:
+            window.location.href = 'impact.html';
+            break;
+          default:
+            break;
+        }
+      });
+    });
+
+    const placeholder = document.querySelector('.placeholder');
+    const subheader = document.querySelector('#subheader');
+
+    function changeColors() {
+      gsap.to('.container', { backgroundColor: '#000', duration: 0.5 });
+      gsap.to('.container, nav, footer, p', { color: '#000', duration: 0.5 });
+    }
+
+    function revertColors() {
+      gsap.to('.container', { backgroundColor: '#000', duration: 0.5 });
+      gsap.to('.container, nav, footer, p', { color: '#000', duration: 0.5 });
+    }
+
+    items.forEach((item) => {
+      item.addEventListener('mouseover', changeColors);
+      item.addEventListener('mouseout', revertColors);
+    });
+
+    function animateScale(element, scaleValue) {
+      gsap.fromTo(element, { scale: 1 }, { scale: scaleValue, duration: 2, ease: "power1.out" });
+    }
+
+    function wrapLetters(text) {
+      placeholder.innerHTML = ''; // Clear the placeholder
+      [...text].forEach(letter => {
+        const span = document.createElement('span');
+        span.style.filter = 'blur(8px)';
+        span.textContent = letter;
+        placeholder.appendChild(span);
+      });
+    }
+
+    function animateBlurEffect() {
+      const letters = placeholder.children;
+      let index = 0;
+
+      function clearNextLetter() {
+        if (index < letters.length) {
+          gsap.to(letters[index], { filter: 'blur(0px)', duration: 0.5 });
+          index++;
+          setTimeout(clearNextLetter, 100);
+        }
+      }
+      clearNextLetter();
+    }
+
+    function shuffleLetters(finalText) {
+      wrapLetters(finalText.replace(/./g, ' '));
+
+      let textArray = finalText.split('');
+      let shufflingCounter = 0;
+      let intervalHandles = [];
+
+      function shuffle(index) {
+        if (shufflingCounter < 30) {
+          textArray[index] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[Math.floor(Math.random() * 26)];
+          placeholder.children[index].textContent = textArray[index];
+        } else {
+          placeholder.children[index].textContent = finalText.charAt(index);
+          clearInterval(intervalHandles[index]);
+        }
+      }
+
+      for (let i = 0; i < finalText.length; i++) {
+        intervalHandles[i] = setInterval(shuffle, 80, i);
+      }
+
+      setTimeout(() => {
+        shufflingCounter = 30;
+        for (let i = 0; i < finalText.length; i++) {
+          placeholder.children[i].textContent = finalText.charAt(i);
+          clearInterval(intervalHandles[i]);
+        }
+        animateBlurEffect();
+      }, 1000);
+    }
+
+    function updatePlaceholderText(event) {
+      const newText = event.target.textContent.toUpperCase();
+      const itemIndex = Array.from(items).indexOf(event.target);
+      const newSubHeaderText = subHeaders[itemIndex] || '...';
+
+      subheader.textContent = newSubHeaderText.toUpperCase();
+      animateScale(placeholder, 1.25);
+      shuffleLetters(newText);
+    }
+
+    function resetPlaceholderText() {
+      const defaultText = 'WELCOME';
+      const defaultSubHeaderText = 'to the XFUNCTIONAL tools shop ©  2025';
+
+      subheader.textContent = defaultSubHeaderText;
+      animateScale(placeholder, 1.25);
+      shuffleLetters(defaultText);
+    }
+
+    items.forEach((item) => {
+      item.addEventListener('mouseover', updatePlaceholderText);
+      item.addEventListener('mouseout', resetPlaceholderText);
+    });
+
+   
+  </script>
+</body>
+</html>

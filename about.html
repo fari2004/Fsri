@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us - XFUNCTIONAL</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: 'Roboto', sans-serif;
+      color: #333;
+      background-color: #f9f9f9;
+    }
+
+    .container {
+      width: 100%;
+      height: 100%;
+    }
+
+    header {
+    width: 100%;
+    height: 60vh;
+    background-image: url('IMG_2099.jpeg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    background-color: #f3f1e5;
+  }
+
+  /* Header Title */
+  header h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 4rem;
+    font-weight: 700;
+    color: black;  /* Warm brown */
+    text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0;
+    animation: fadeInTitle 2s ease-out forwards;
+  }
+
+  /* Header Subtext */
+  .header-subtext {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1.4rem;
+    color: #bfa46f;
+    margin-top: 1rem;
+    font-weight: 300;
+    opacity: 0;
+    animation: fadeInSubText 2s ease-out forwards;
+  }
+
+  /* Decorative Stem Elements */
+  .header-decorations {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+    pointer-events: none; /* Make sure the stems don't block any content */
+  }
+
+  .stem-left, .stem-right {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #000000;
+    position: absolute;
+    animation: floating 4s ease-in-out infinite alternate;
+  }
+
+  .stem-left {
+    left: 10%;
+  }
+
+  .stem-right {
+    right: 10%;
+  }
+
+  /* Animations */
+  @keyframes fadeInTitle {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeInSubText {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Floating Animations for the Stems */
+  @keyframes floating {
+    0% {
+      transform: translateY(0) scale(1) rotate(0deg);
+    }
+
+    25% {
+      transform: translateY(-10px) scale(1.1) rotate(15deg);
+    }
+
+    50% {
+      transform: translateY(10px) scale(1) rotate(30deg);
+    }
+
+    75% {
+      transform: translateY(-5px) scale(0.9) rotate(45deg);
+    }
+
+    100% {
+      transform: translateY(0) scale(1) rotate(60deg);
+    }
+  }
+    section {
+      padding: 4rem 2rem;
+      text-align: center;
+      background-color: #896545;
+      color:#fff;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin: -3rem 2rem 2rem;
+      border-radius: 8px;
+      opacity: 0;
+    }
+
+    .about-text h2 {
+      font-family: 'Open Sans', sans-serif;
+      font-size: 2.5rem;
+      color: #553507;
+      margin-bottom: 1.5rem;
+    }
+
+    .about-text {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      color: #000000;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-button {
+      margin: 20px;
+      padding: 1rem 2rem;
+      background-color: #b47d50;
+      color: #000000;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .cta-button:hover {
+      background-color: #9e9287;
+      transform: translateY(-3px);
+    }
+
+    .team-section {
+      padding: 4rem 2rem;
+      background-image: url('IMG_2099.jpeg');
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin-top: 3rem;
+      border-radius: 8px;
+      opacity: 0;
+    }
+
+    .team-section h2 {
+      font-family: 'Open Sans', sans-serif;
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      color: #2f2114;
+      text-transform: uppercase;
+    }
+
+    .team-members {
+      display: flex;
+      justify-content: space-around;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .team-member {
+      
+      background-color: #f1f1f1;
+      border-radius: 10px;
+      overflow: hidden;
+      width: 250px;
+      padding: 1rem;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .team-member img {
+      width: 100%;
+      border-radius: 10px;
+      object-fit: cover;
+      height: 200px;
+    }
+
+    .team-member h3 {
+      
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      color: #333;
+    }
+
+    .team-member p {
+
+      font-size: 1rem;
+      color: #777;
+      margin-top: 0.5rem;
+    }
+
+    footer {
+      background-color: #ab7b4b;
+      text-align: center;
+      padding: 2rem;
+      color: #000000;
+    }
+
+    footer a {
+      color: #f4a261;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+    h2 {
+      font-family: 'Open Sans', sans-serif;
+      font-weight: bolder;
+
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header Section -->
+    <header>
+      <h1 class="about-title">A b o u t. U S</h1>
+      <div class="header-decorations">
+        <div class="stem-left"></div>
+        <div class="stem-right"></div>
+      </div>
+    </header>
+    <!-- About Text Section -->
+    <section>
+      <div class="about-text">
+        <h2>Welcome to XFUNCTIONAL</h2>
+        <p>
+          XFUNCTIONAL is dedicated to providing high-quality, functional tools designed for every task.
+          We offer an extensive range of innovative solutions to help individuals and businesses enhance 
+          their performance and achieve their goals. Our products are crafted with precision, ensuring 
+          reliability and practicality.
+        </p>
+        <p>
+          Whether you're looking for advanced tools, insightful innovations, or simply want to improve your workflow,
+          XFUNCTIONAL has something for you. We focus on quality, durability, and sustainability in all of our products.
+        </p>
+        <button class="cta-button">Explore Our Tools</button>
+      </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team-section">
+      <h2>Meet Our Team</h2>
+      <div class="team-members">
+        <!-- Team Member 1 -->
+        <div class="team-member">
+          <img src="headshotPlaceholder.png" alt="Team Member 1">
+          <h3>Hnin Nandar</h3>
+          <p>Page admin</p>
+        </div>
+
+        <!-- Team Member 2 -->
+        <div class="team-member">
+          <img src="user-profile-icon-vector-avatar-600nw-2247726673.jpg" alt="Team Member 2">
+          <h3>Thawzin</h3>
+          <p>Product Manager</p>
+        </div>
+
+        <!-- Team Member 3 -->
+        <div class="team-member">
+          <img src="user-profile-icon-vector-avatar-600nw-2247726673.jpg" alt="Team Member 3">
+          <h3>Thurein</h3>
+          <p>Page admin</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer>
+      <p>© 2025 XFUNCTIONAL. All rights reserved. <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+    </footer>
+  </div>
+
+  <script>
+    // GSAP Animations
+    window.onload = function() {
+      // Header Animation
+      gsap.to("header h1", { opacity: 1, duration: 2, y: -50, ease: "power4.out" });
+
+      // Section Animations
+      gsap.to("section", { opacity: 1, duration: 2, y: -30, delay: 0.5, ease: "power4.out" });
+
+      // Team Members Fade In
+      gsap.utils.toArray(".team-member").forEach((member, index) => {
+        gsap.to(member, { opacity: 1, y: 0, duration: 1, delay: index * 0.3, ease: "power4.out" });
+      });
+    }
+  // Add event listener to the button
+  document.querySelector('.cta-button').addEventListener('click', function() {
+    window.location.href = 'sec.html'; // Redirect to sec.html
+  });
+
+  </script>
+
+</body>
+</html>

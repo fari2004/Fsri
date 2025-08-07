@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Order & Delivery Management</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f4e6;
+            margin: 0;
+            padding: 0;
+            color: #4a3c31;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #6b4f3a;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .tab {
+            background-color: #8c6a47;
+            color: #fff;
+            padding: 15px 30px;
+            cursor: pointer;
+            border-radius: 8px;
+            margin: 0 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .tab:hover, .active-tab {
+            background-color: #a07856;
+        }
+
+        .orders, .delivery-system {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .orders.active-tab, .delivery-system.active-tab {
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #6b4f3a;
+            color: #fff;
+        }
+
+        td {
+            background-color: #f9f4e6;
+            color: #4a3c31;
+        }
+
+        .action-btn {
+            background-color: #8c6a47;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .action-btn:hover {
+            background-color: #a07856;
+        }
+
+        .status-select {
+            padding: 5px 10px;
+            margin-right: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Admin Panel - Order & Delivery Management</h1>
+
+    <!-- Tab Navigation -->
+    <div class="tabs">
+        <div class="tab active-tab" id="customerOrdersTab">Order Management</div>
+        <div class="tab" id="deliverySystemTab">Delivery Management</div>
+    </div>
+
+    <!-- Order Management Section -->
+    <div class="orders active-tab" id="customerOrders">
+        <h2>Order Management</h2>
+        <table id="ordersTable">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer Name</th>
+                    <th>Order Date</th>
+                    <th>Items</th>
+                    <th>Total Amount</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Orders will be dynamically inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Delivery Management Section -->
+    <div class="delivery-system" id="deliverySystem">
+        <h2>Delivery Management</h2>
+        <table id="deliveryTable">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer Name</th>
+                    <th>Delivery Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Delivery orders will be dynamically inserted here -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+// Initialize order and delivery data arrays
+let customerOrders = [];
+let deliveryOrders = [];
+
+// Function to update the Customer Orders Table
+function updateOrdersTable() {
+    const ordersTable = document.getElementById('ordersTable').getElementsByTagName('tbody')[0];
+    ordersTable.innerHTML = '';
+
+    customerOrders.forEach(order => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${order.orderId}</td>
+            <td>${order.customerName}</td>
+            <td>${order.orderDate}</td>
+            <td>${order.items.map(item => item.name).join(', ')}</td>
+            <td>$${order.totalAmount.toFixed(2)}</td>
+            <td><button class="action-btn" onclick="moveToDelivery('${order.orderId}')">Add to Delivery</button></td>
+        `;
+        ordersTable.appendChild(row);
+    });
+}
+
+// Function to update the Delivery Table
+function updateDeliveryTable() {
+    const deliveryTable = document.getElementById('deliveryTable').getElementsByTagName('tbody')[0];
+    deliveryTable.innerHTML = '';
+
+    deliveryOrders.forEach(order => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${order.orderId}</td>
+            <td>${order.customerName}</td>
+            <td>${order.deliveryDate}</td>
+            <td>
+                <select class="status-select" onchange="updateDeliveryStatus('${order.orderId}', this.value)">
+                    <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                    <option value="In Progress" ${order.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+                    <option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                </select>
+            </td>
+            <td><button class="action-btn" onclick="completeDelivery('${order.orderId}')">Complete Delivery</button></td>
+        `;
+        deliveryTable.appendChild(row);
+    });
+}
+
+// Function to move an order to the Delivery System
+function moveToDelivery(orderId) {
+    const order = customerOrders.find(o => o.orderId === orderId);
+    if (order) {
+        // Add delivery date and status
+        order.deliveryDate = new Date().toLocaleDateString();
+        order.status = 'Pending';
+
+        // Move order from customerOrders to deliveryOrders
+        deliveryOrders.push(order);
+        customerOrders = customerOrders.filter(o => o.orderId !== orderId);
+
+        // Update both tables
+        updateOrdersTable();
+        updateDeliveryTable();
+    }
+}
+
+// Function to update the delivery status
+function updateDeliveryStatus(orderId, newStatus) {
+    const order = deliveryOrders.find(o => o.orderId === orderId);
+    if (order) {
+        order.status = newStatus;
+        updateDeliveryTable();
+    }
+}
+
+// Function to mark a delivery as complete
+function completeDelivery(orderId) {
+    const order = deliveryOrders.find(o => o.orderId === orderId);
+    if (order) {
+        order.status = 'Delivered';
+        updateDeliveryTable();
+    }
+}
+
+// Tab Navigation
+document.getElementById('customerOrdersTab').addEventListener('click', () => {
+    document.getElementById('customerOrders').style.display = 'block';
+    document.getElementById('deliverySystem').style.display = 'none';
+    document.getElementById('customerOrdersTab').classList.add('active-tab');
+    document.getElementById('deliverySystemTab').classList.remove('active-tab');
+});
+
+document.getElementById('deliverySystemTab').addEventListener('click', () => {
+    document.getElementById('customerOrders').style.display = 'none';
+    document.getElementById('deliverySystem').style.display = 'block';
+    document.getElementById('deliverySystemTab').classList.add('active-tab');
+    document.getElementById('customerOrdersTab').classList.remove('active-tab');
+});
+
+// Simulate receiving orders from the customer side (using localStorage)
+function loadCustomerOrder() {
+    const orderDetails = JSON.parse(localStorage.getItem('newOrder'));
+    if (orderDetails) {
+        customerOrders.push(orderDetails);
+        updateOrdersTable();
+        localStorage.removeItem('newOrder');
+    }
+}
+
+// Load customer orders when the page loads
+window.onload = loadCustomerOrder;
+</script>
+
+</body>
+</html>

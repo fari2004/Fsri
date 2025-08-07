@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Panel - Add to Cart & Confirm Purchase</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f4e6;
+            margin: 0;
+            padding: 0;
+            color: #4a3c31;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #6b4f3a;
+        }
+
+        .product-list {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .product {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 200px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .product:hover {
+            transform: scale(1.05);
+        }
+
+        .product img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .product h2 {
+            font-size: 18px;
+            color: #6b4f3a;
+            margin: 10px 0;
+        }
+
+        .product p {
+            color: #d68b56;
+            font-size: 16px;
+        }
+
+        .cart {
+            margin-top: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #cartItems {
+            list-style: none;
+            padding: 0;
+        }
+
+        #cartItems li {
+            font-size: 16px;
+            color: #4a3c31;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #8c6a47;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #a07856;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Customer Panel - Add to Cart</h1>
+
+    <!-- Product List -->
+    <div class="product-list">
+        <div class="product" id="product1">
+            <img src="https://via.placeholder.com/200x150" alt="Product 1">
+            <h2>Product 1</h2>
+            <p>$25.00</p>
+            <button onclick="addToCart('Product 1', 25.00)">Add to Cart</button>
+        </div>
+        <div class="product" id="product2">
+            <img src="https://via.placeholder.com/200x150" alt="Product 2">
+            <h2>Product 2</h2>
+            <p>$15.00</p>
+            <button onclick="addToCart('Product 2', 15.00)">Add to Cart</button>
+        </div>
+        <div class="product" id="product3">
+            <img src="https://via.placeholder.com/200x150" alt="Product 3">
+            <h2>Product 3</h2>
+            <p>$30.00</p>
+            <button onclick="addToCart('Product 3', 30.00)">Add to Cart</button>
+        </div>
+    </div>
+
+    <!-- Cart Section -->
+    <div class="cart">
+        <h2>Your Cart</h2>
+        <ul id="cartItems">
+            <!-- Cart items will appear here -->
+        </ul>
+        <button id="confirmPurchaseButton" onclick="confirmPurchase()" disabled>Confirm Purchase</button>
+    </div>
+</div>
+
+<script>
+    // Initialize an empty cart array
+    let cart = [];
+
+    // Function to add items to the cart
+    function addToCart(productName, price) {
+        const product = { name: productName, price: price };
+        cart.push(product);
+        updateCartUI();
+    }
+
+    // Update the Cart UI
+    function updateCartUI() {
+        const cartItemsList = document.getElementById('cartItems');
+        const confirmPurchaseButton = document.getElementById('confirmPurchaseButton');
+
+        // Clear current cart items
+        cartItemsList.innerHTML = '';
+
+        // Add each product in the cart to the list
+        cart.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = `${item.name} - $${item.price.toFixed(2)}`;
+            cartItemsList.appendChild(li);
+        });
+
+        // Enable the "Confirm Purchase" button if the cart is not empty
+        if (cart.length > 0) {
+            confirmPurchaseButton.disabled = false;
+        } else {
+            confirmPurchaseButton.disabled = true;
+        }
+    }
+
+    // Function to confirm the purchase and simulate order confirmation
+    function confirmPurchase() {
+    if (cart.length === 0) return;
+
+    const orderDetails = {
+        orderId: `ORD${Math.floor(Math.random() * 1000)}`,
+        customerName: `Customer ${Math.floor(Math.random() * 1000)}`,
+        orderDate: new Date().toLocaleDateString(), // Today's date
+        items: cart,
+        totalAmount: cart.reduce((acc, item) => acc + item.price, 0)
+    };
+
+    // Retrieve existing orders from localStorage or create an empty array
+    let customerOrders = JSON.parse(localStorage.getItem('customerOrders')) || [];
+
+    // Add the new order to the list
+    customerOrders.push(orderDetails);
+
+    // Save updated orders back to localStorage
+    localStorage.setItem('customerOrders', JSON.stringify(customerOrders));
+
+    // Clear the cart after confirming purchase
+    cart = [];
+    updateCartUI();
+
+    alert('Your purchase has been confirmed! The admin will process your order.');
+}
+
+</script>
+
+</body>
+</html>

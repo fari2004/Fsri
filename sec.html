@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Luxury Online Shop</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    </head>
+    <style>
+        body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: linear-gradient(135deg, #4E2A14, #3B1E0A, #2A1200); /* Rich gradient */
+    position: relative;
+}
+
+/* BACKGROUND BLUR - Unchanged */
+body::before {
+    content: "";
+    position: fixed; 
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('IMG_2099.jpeg');
+    background-size: 100% 140%;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: blur(6px); 
+    z-index: -1; 
+}
+
+/* NAVBAR CONTAINER - Keep background, only spacing optimized */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 18px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: black;
+    clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
+    z-index: 1000;
+}
+
+/* ======== LOGO — Unchanged ======== */
+@keyframes logoGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.logo {
+    font-size: 38px;
+    font-family: "Playfair Display", serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    position: absolute;
+    left: 50px;
+    top: 5px;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(90deg, 
+        #2e1d14, #5a3e2b, #a87c5f, #d49a6a, #ff914d, 
+        #c67c4e, #8c4a2f, #5a3e2b, #C0C0C0, #decbcb, 
+        #2e1d14, #a87c5f, #d49a6a, #ff914d, #C0C0C0, 
+        #8c4a2f, #5a3e2b, #E0E0E0);
+    background-size: 400% 100%;
+    color: transparent;
+    background-clip: text;
+    animation: logoGradient 5s infinite linear;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.2);
+}
+
+.logo .big-x {
+    font-size: 42px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 900;
+    margin-right: 8px;
+    transform: scale(1.2);
+    background-clip: text;
+    color: #12010b;
+}
+
+.logo .small-text {
+    font-size: 20px;
+    font-weight: 600;
+    font-family: "Poppins", sans-serif;
+    color: transparent;
+    background-clip: text;
+}
+
+/* ========= NAV LINKS ========= */
+.nav-links {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+    justify-content: center;
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 15px;
+    color: white;
+    z-index: 5;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.nav-links a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #f6b689;
+}
+
+/* ========= SEARCH BAR ========= */
+.search-wrapper {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.search-bar {
+    width: 340px;
+    max-width: 100%;
+    padding: 8px 16px;
+    font-size: 14px;
+    border: none;
+    border-radius: 20px;
+    outline: none;
+    font-family: "Poppins", sans-serif;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    transition: background 0.3s;
+}
+
+.search-bar::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.search-bar:focus {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* ========= NAV ICONS ========= */
+.nav-icons {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.nav-icons div {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+    transition: background 0.2s ease, transform 0.2s ease;
+    cursor: pointer;
+}
+
+.nav-icons div:hover {
+    background: rgba(255, 255, 255, 0.18);
+    transform: scale(1.05);
+}
+
+.nav-icons .material-icons {
+    color: #fff;
+    font-size: 20px;
+    transition: color 0.2s ease;
+}
+
+.nav-icons div:hover .material-icons {
+    color: #f6b689;
+}
+
+
+.logo {
+    font-size: 38px;
+    font-family: "Playfair Display", serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    position: absolute;
+    left: 50px;
+    top: 5px;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(90deg, 
+        #2e1d14, #5a3e2b, #a87c5f, #d49a6a, #ff914d, 
+        #c67c4e, #8c4a2f, #5a3e2b, #C0C0C0, #decbcb, 
+        #2e1d14, #a87c5f, #d49a6a, #ff914d, #C0C0C0, 
+        #8c4a2f, #5a3e2b, #E0E0E0);
+    background-size: 400% 100%;
+    color: transparent;
+    background-clip: text;
+    animation: logoGradient 5s infinite linear;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.2);
+}
+
+.logo .big-x {
+    font-size: 42px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 900;
+    margin-right: 8px;
+    transform: scale(1.2);
+    background-clip: text;
+    color: #12010b;
+}
+
+.logo .small-text {
+    font-size: 20px;
+    font-weight: 600;
+    font-family: "Poppins", sans-serif;
+    color: transparent;
+    background-clip: text;
+}
+
+/* Product Container */
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+}
+
+.cart {
+    width: 22%;
+    height: 500px;
+    position: relative;
+    top:240px;
+    background-color: none;
+    overflow: hidden;
+    border-radius: 20px;
+    margin: 10px;
+    display: inline-block;
+}
+
+.cart .inner-layer {
+    width: 50%;
+    height: 60%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: none;
+    border: none;
+    border-bottom: none;
+    border-radius: 20px 0px;
+    padding: 20px;
+}
+
+.cart .middle-layer {
+    width: 50%;
+    height: 60%;
+    position: absolute;
+    top: 8%;
+    left: 10%;
+    background-color: #926c4a;
+    border: 2px dashed black;
+    padding: 20px;
+}
+
+.cart .outer-layer {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: black;
+    border-radius: 40px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 10px dashed #3E1F1B;
+    border-left: 10px dashed #3E1F1B;
+    border-right: 10px dashed #3E1F1B;
+}
+
+.cart .outer-layer:before {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90px;
+    height: 40px;
+    background-color: black;
+    border-radius: 0 0 50px 50px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.cart .image-container {
+    width: 100%;
+    height: 180px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 15px;
+    box-shadow: inset 0 0 20px rgba(139, 69, 19, 0.3);
+    overflow: hidden;
+}
+
+.cart .image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+.cart .description {
+    margin-top: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #FFFFFF;
+    line-height: 1.5;
+    text-align: center;
+}
+
+.cart .price {
+    margin-top: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #FFD700;
+    text-align: center;
+}
+
+.cart .add-to-cart-btn {
+    margin-top: 20px;
+    width: 120px;
+    height: 40px;
+    padding: 12px 0px;
+    background-color:  #926c4a;
+    color: black;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: 0.3s;
+    box-shadow: 0 4px 10px rgba(167, 121, 51, 0.5);
+}
+
+.cart .add-to-cart-btn:hover {
+    background-color: #ff8c00;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.7);
+    transform: scale(1.1);
+}
+
+.cart .add-to-cart-btn:disabled {
+    background-color: #B0B0B0;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.cart .favorite-icon {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+    z-index: 1;
+}
+
+
+        .favorite-icon.active {
+            color:rgb(246, 182, 137);
+        }
+
+/* Product Container - Luxurious Brown Theme */
+.product-container {
+    display: flex;
+    gap: 40px;
+    left:50px;
+    overflow-x: auto;
+    padding: 120px 0px;
+    white-space: nowrap;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    position: absolute;
+    background: none; /* Rich gradient */
+   z-index: 100;
+    transition: all 0.3s ease;
+}
+
+/* Layered Backgrounds */
+
+/* Bottom Layer */
+
+/* Hide Scrollbar */
+.product-container::-webkit-scrollbar {
+    display: none;
+}
+        /* Product Tile */
+        .product-tile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            border-radius: 80px 50px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            position: relative;
+            top:-15px;
+            left:-80px;
+            z-index:8000;
+        }
+
+      
+.product-image {
+    width: 60%;
+    height: 60%;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 0 10px rgba(255, 182, 193, 0.5);
+    transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+    cursor: pointer; /* Makes it look clickable */
+}
+
+/* Image Styling */
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    transition: transform 0.4s ease-in-out;
+}
+
+/* Hover Effect */
+.product-image:hover {
+    box-shadow: 0 0 15px rgba(255, 182, 193, 0.8); /* Soft glow */
+    transform: scale(1.05); /* Slight zoom */
+}
+
+.product-image:hover img {
+    transform: scale(1.1); /* Zoom effect */
+}
+
+/* Active/Click Effect */
+.product-image:active {
+    transform: scale(0.95); /* Slight press effect */
+}
+
+
+.product-title-container {
+    position: absolute;
+    bottom: -60px; /* Moves the title lower */
+    width: 100%;
+    text-align: center;
+}
+
+/* U-Shaped Title */
+.product-title {
+    display: flex;
+    justify-content: center;
+    font-size: 12px;
+    font-family: "Poppins", sans-serif;
+    font-weight: bold;
+    color: white;
+    gap: 3px;
+    position: relative;
+    padding: 12px 24px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    top:10px;
+}
+
+/* Single Decorative Curl Line Below */
+.product-title::after {
+    content: "";
+    position: absolute;
+    width: 100px; /* Adjust the curl width */
+    height: 25px; /* Adjust the curl height */
+    border-radius: 50%;
+    border-bottom: 2px solid #ff6347; /* Coral color */
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 20px; /* Moves the line below the text */
+}
+/* Smooth Arc Formation */
+.product-title span:nth-child(1) {
+    transform: translateY(-20px) rotate(-15deg);
+}
+
+.product-title span:nth-child(2) {
+    transform: translateY(-17px) rotate(-12deg);
+}
+
+.product-title span:nth-child(3) {
+    transform: translateY(-14px) rotate(-9deg);
+}
+
+.product-title span:nth-child(4) {
+    transform: translateY(-11px) rotate(-6deg);
+}
+
+.product-title span:nth-child(5) {
+    transform: translateY(-8px) rotate(-3deg);
+}
+
+.product-title span:nth-child(6) {
+    transform: translateY(-8px) rotate(3deg);
+}
+
+.product-title span:nth-child(7) {
+    transform: translateY(-11px) rotate(6deg);
+}
+
+.product-title span:nth-child(8) {
+    transform: translateY(-14px) rotate(9deg);
+}
+
+.product-title span:nth-child(9) {
+    transform: translateY(-17px) rotate(12deg);
+}
+
+.product-title span:nth-child(10) {
+    transform: translateY(-20px) rotate(15deg);
+}
+
+.view-cart-btn{
+    background-color:black;
+    border:black;
+}
+
+/* [ Original styles – unchanged ] */
+/* Keep your existing CSS – all your base styles are intact */
+
+/* --- RESPONSIVE STYLES START HERE --- */
+
+/* For tablets (portrait < 900px) */
+@media (max-width: 900px) {
+    .navbar {
+        flex-direction: column;
+        padding: 10px 20px;
+        clip-path: none;
+    }
+
+    .logo {
+        font-size: 28px;
+        left: 20px;
+        top: 10px;
+    }
+
+    .nav-links {
+        position: static;
+        flex-wrap: wrap;
+        font-size: 18px;
+        justify-content: center;
+        margin-top: 10px;
+        transform: none;
+        padding: 10px;
+    }
+
+    .nav-icons {
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    .product-container {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        overflow-x: scroll;
+        padding: 80px 10px;
+        gap: 20px;
+    }
+
+    .product-tile {
+        min-width: 250px;
+        padding: 15px;
+        top: 0;
+        left: 0;
+    }
+
+    .cart {
+        width: 45%;
+        height: auto;
+        margin: 15px auto;
+    }
+
+    .cart .image-container {
+        height: 160px;
+    }
+
+    .cart .description {
+        font-size: 16px;
+    }
+
+    .cart .price {
+        font-size: 18px;
+    }
+
+    .cart .add-to-cart-btn {
+        width: 100px;
+        height: 36px;
+        font-size: 12px;
+    }
+}
+
+/* For phones (portrait < 600px) */
+@media (max-width: 600px) {
+    .navbar {
+        flex-direction: column;
+        padding: 8px 16px;
+        clip-path: none;
+    }
+
+    .logo {
+        font-size: 22px;
+        left: 10px;
+        top: 5px;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        font-size: 16px;
+        gap: 15px;
+        position: static;
+        transform: none;
+        padding: 10px 0;
+    }
+
+    .nav-icons {
+        gap: 15px;
+        margin-top: 10px;
+    }
+
+    .nav-icons div {
+        width: 40px;
+        height: 40px;
+    }
+
+    .nav-icons .material-icons {
+        font-size: 18px !important;
+    }
+
+    .product-container {
+        flex-direction: column;
+        align-items: center;
+        overflow-x: hidden;
+        padding: 60px 10px;
+    }
+
+    .product-tile {
+        width: 90%;
+        padding: 10px;
+    }
+
+    .product-image {
+        width: 70%;
+        height: auto;
+    }
+
+    .product-title {
+        font-size: 10px;
+        flex-wrap: wrap;
+        padding: 8px;
+    }
+
+    .cart {
+        width: 90%;
+        height: auto;
+        margin: 15px auto;
+        top: 0;
+    }
+
+    .cart .image-container {
+        height: 140px;
+    }
+
+    .cart .description,
+    .cart .price {
+        font-size: 16px;
+    }
+
+    .cart .add-to-cart-btn {
+        width: 90px;
+        height: 34px;
+        font-size: 11px;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <!-- Elegant 3D Navbar -->
+    <nav class="navbar">
+
+    <!-- Logo (Unchanged) -->
+    <div class="logo">
+        <span class="big-x">X</span><span class="small-text">Functional</span>
+    </div>
+
+    <!-- Left Icons (Cart, Favorites, Account, Dashboard) -->
+    <div class="nav-icons left-icons">
+        <div onclick="window.location.href='viewcartt.html'">
+            <span class="material-icons">shopping_cart</span>
+        </div>
+        <div onclick="window.location.href='fav.html'">
+            <span class="material-icons">favorite</span>
+        </div>
+        <div onclick="window.location.href='signup.html'">
+            <span class="material-icons">account_circle</span>
+        </div>
+        <div onclick="window.location.href='dash.html'">
+            <span class="material-icons">dashboard</span>
+        </div>
+    </div>
+
+    <!-- Navigation Links -->
+    <div class="nav-links">
+        <a href="sec.html">Home</a>
+        <a href="product.html">Products</a>
+    </div>
+
+    <!-- Search Bar (Functional and Styled) -->
+    <div class="search-wrapper">
+        <input 
+            type="text" 
+            class="search-bar" 
+            placeholder="Search products A–Z..." 
+            onkeydown="if(event.key === 'Enter') window.location.href='search.html?q='+this.value"
+        />
+    </div>
+
+</nav>
+
+    
+<div class="product-container">
+    <!-- Layered Background for 5D Effect -->
+    <div class="layer-shape layer-top"></div>
+    <div class="layer-shape layer-middle"></div>
+    <div class="layer-shape layer-bottom"></div>
+
+    <!-- Product Tiles (Your Original Structure) -->
+    <div class="product-tile">
+        <div class="product-image"><img src="timthumb (8).png"></div>
+        <div class="product-title">
+            <span>w</span><span>r</span><span>e</span><span>c</span><span>h</span><span>e</span><span>s</span>
+        </div>
+    </div>
+    <div class="product-tile">
+        <div class="product-image"><img src="timthumb (8).png"></div>
+        <div class="product-title"><span>P</span><span>r</span><span>o</span><span>d</span><span>u</span><span>c</span><span>t</span><span>1</span></div>
+    </div>
+    <div class="product-tile">
+        <div class="product-image"><img src="timthumb (8).png"></div>
+        <div class="product-title"><span>P</span><span>r</span><span>o</span><span>d</span><span>u</span><span>c</span><span>t</span><span>2</span></div>
+    </div>
+    <div class="product-tile">
+        <div class="product-image"><img src="timthumb (8).png"></div>
+        <div class="product-title"><span>P</span><span>r</span><span>o</span><span>d</span><span>u</span><span>c</span><span>t</span><span>3</span></div>
+    </div>
+    <div class="product-tile">
+        <div class="product-image"><img src="timthumb (8).png"></div>
+        <div class="product-title"><span>P</span><span>r</span><span>o</span><span>d</span><span>u</span><span>c</span><span>t</span><span>4</span></div>
+    </div>
+    <div class="product-tile">
+        <div class="product-image"><img src="timthumb (8).png"></div>
+        <div class="product-title"><span>P</span><span>r</span><span>o</span><span>d</span><span>u</span><span>c</span><span>t</span><span>5</span></div>
+    </div>
+    <div class="product-tile">
+        <div class="product-image"><img src="timthumb (8).png"></div>
+        <div class="product-title"><span>P</span><span>r</span><span>o</span><span>d</span><span>u</span><span>c</span><span>t</span><span>6</span></div>
+    </div>
+   
+
+    <!-- Foreground Layer for Extra Depth -->
+    <div class="layer-shape layer-front"></div>
+</div>
+
+  
+
+    <div class="stem-container">
+        <div class="stem"></div>
+        <div class="stem"></div>
+        <div class="stem"></div>
+        <div class="stem"></div>
+        <div class="stem"></div>
+        <div class="stem"></div>
+        <div class="stem"></div>
+        <div class="stem"></div>
+
+    </div>
+    <div class="container" id="productContainer"></div>
+    <script>
+        // Add product to cart
+        function addToCart(index) {
+          let cart = JSON.parse(localStorage.getItem('cart')) || [];
+          const products = JSON.parse(localStorage.getItem('products')) || [];
+          const product = products[index];
+        
+          if (product.stockQty > 0) {
+            cart.push(product);
+            product.stockQty -= 1;
+            localStorage.setItem('cart', JSON.stringify(cart));
+            localStorage.setItem('products', JSON.stringify(products));
+            alert(`${product.name} has been added to your cart.`);
+            renderCustomerProducts(); // Update the product list
+          } else {
+            alert("Sorry, this product is out of stock.");
+          }
+        }
+        
+        // View the cart (redirect to the cart page)
+       
+        // Render customer products
+        function renderCustomerProducts() {
+          const products = JSON.parse(localStorage.getItem('products')) || [];
+          const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+          const container = document.getElementById('productContainer');
+          container.innerHTML = "";
+        
+          if (products.length === 0) {
+            container.innerHTML = "<p>No products available</p>";
+            return;
+          }
+        
+          products.forEach((product, index) => {
+            const buttonText = product.stockQty > 0 ? "Add to Cart" : "Out of Stock";
+            const buttonDisabled = product.stockQty <= 0 ? "disabled" : "";
+            const isFavorite = favorites.includes(index);
+        
+            const cardHTML = `
+              <div class="cart">
+                <div class="inner-layer"></div>
+                <div class="middle-layer">
+                  <div class="outer-layer">
+                    <div class="image-container" style="background-image: url('${product.imageUrl || 'https://via.placeholder.com/350x180'}');"></div>
+                    <div class="favorite-icon ${isFavorite ? 'active' : ''}" onclick="toggleFavorite(${index})">★</div>
+                    <div class="description">
+                      <p>${product.name}</p>
+                    </div>
+                    <div class="price">$${product.afterPrice.toFixed(2)}</div>
+                    <button class="add-to-cart-btn" onclick="addToCart(${index})" ${buttonDisabled}>
+                      ${buttonText}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            `;
+            container.innerHTML += cardHTML;
+          });
+        }
+        
+        // Toggle favorite status
+        function toggleFavorite(index) {
+          let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+          if (favorites.includes(index)) {
+            favorites = favorites.filter(favIndex => favIndex !== index);
+          } else {
+            favorites.push(index);
+          }
+          localStorage.setItem('favorites', JSON.stringify(favorites));
+          renderCustomerProducts(); // Re-render the products
+        }
+        
+        renderCustomerProducts(); // Render products when the page loads
+        </script>
+        
+
+</body>
+</html>

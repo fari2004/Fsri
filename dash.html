@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: #80674a;
+            color: rgb(0, 0, 0);
+            padding: 20px;
+            border-radius: 8px;
+            margin-right: 20px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin: 15px 0;
+        }
+
+        .sidebar ul li a {
+            color: rgb(34, 16, 0);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 18px;
+        }
+
+        .sidebar ul li a:hover {
+            color: #adaca9;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        /* Theme Toggle Button */
+        #theme-toggle {
+            width: 50px;
+            height: 25px;
+            border-radius: 50px;
+            background-color: #555;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+z-index:100;
+
+        }
+
+        #theme-toggle span {
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        body.dark-mode #theme-toggle span {
+            transform: translateX(25px);
+            background-color: #121212;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            position:relative;
+            top:250px;
+            width: 600px;
+            height: 500px;
+            margin-bottom: 40px;
+            margin-left: 20px;
+        }
+
+        .charts-wrapper {
+            display: flex;
+            justify-content: center;
+position:relative;
+            
+            right:25%;
+top:-10px;
+        }
+
+        /* Circle Containers for Quantity Sales */
+       
+
+        /* Dark Mode */
+        body.dark-mode {
+            background-color: #121212;
+            color: white;
+        }
+
+        body.dark-mode .sidebar {
+            background-color: #1e1e1e;
+        }
+
+        body.dark-mode .main-content {
+            background-color: #1f1f1f;
+            color:#ff9800;
+        }
+
+        body.dark-mode .sidebar ul li a {
+            color: #aaa;
+        }
+
+        body.dark-mode .sidebar ul li a:hover {
+            color: #ff9800;
+        }
+
+        /* iPhone-style Theme Toggle */
+        .theme-toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-switch {
+            position: relative;
+            width: 50px;
+            height: 30px;
+        }
+
+        .theme-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            border-radius: 50px;
+            transition: 0.4s;
+        }
+
+        .slider:before {
+            content: "";
+            position: absolute;
+            height: 22px;
+            width: 22px;
+            border-radius: 50px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+        }
+
+        input:checked + .slider {
+            background-color: #121212;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+            background-color: #ff9800;
+        }
+
+            body.dark-mode {
+            background-color: #121212;
+            color: white;
+        }
+
+
+        .controls {
+            text-align: center;
+            padding: 20px;
+position:absolute;
+            top:10px;
+            right:65%;
+
+        }
+
+        input, select {
+            padding: 8px;
+            font-size: 16px;
+            border-radius: 5px;
+            position:absolute;
+            top:5px;
+            border: 1px solid #b06d56;
+            background-color: #d8c38e;
+            color: #3e1c1c;
+            margin: 5px;
+        }
+
+        .summary {
+position:absolute;
+            
+            right:53%;
+top:110px;
+
+           
+            color: #3e1c1c;
+        }
+body.dark-mode .summary{
+    color: #d8c38e;
+}
+        .sales-container {
+position:absolute;
+            
+            right:0%;
+top:60px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            width: 200px;
+            height: 200px;
+        }
+
+        .chart-wrapper canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        body.dark-mode .chart-wrapper {
+            color: #fdfcf9;
+        }
+        .ring-title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 18px;
+            font-weight: bold;
+            color: #3e1c1c;
+        }
+        body.dark-mode .ring-title {
+            color: #d8c38e;
+        }
+        /* Icon Styles */
+        body.dark-mode input, body.dark-mode select {
+    background-color: #3e3e3e;
+    color: #d8c38e;
+}
+
+.admin-cards {
+    position: absolute;
+    right: 25px;
+    top: 350px;
+    display: flex;
+    height:200px;
+    width: 550px; /* Set a smaller width */
+}
+/* Individual admin card */
+.admin-card {
+    background-color: #776040; /* Medium brown */
+    border-radius: 10px;
+    padding: 20px;
+    width: 270px;
+    text-align: center;
+    margin: 10px;
+    transition: transform 0.3s ease;
+}
+
+.admin-card:hover {
+    transform: translateY(-10px);
+}
+
+/* Admin profile image */
+.admin-card img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    margin-bottom: 15px;
+}
+
+/* Admin name and role */
+.admin-card h3 {
+    font-size: 1.5rem;
+    color: #271700; /* Light brown accent color */
+    margin-bottom: 10px;
+}
+body.dark-mode .admin-card h3 {
+    color:#adaca9;
+}
+.admin-card p {
+    font-size: 1rem;
+    width:100px;
+    color: #fff;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .admin-cards {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .admin-card {
+        width: 80%;
+        margin: 15px 0;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    h1 {
+        font-size: 2rem;
+    }
+
+    .admin-card h3 {
+        font-size: 1.2rem;
+    }
+
+    .admin-card p {
+        font-size: 0.9rem;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <div class="container" style="display: flex; flex-wrap: wrap;">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>Dashboard</h2>
+            <ul>
+                <li><a href="sec.html" target="_blank" onclick="console.log('Home clicked');">Home</a></li>
+                <li><a href="bk.html" target="_blank">Product panel</a></li>
+                <li><a href="orderpanel.html" target="_blank">Order panel</a></li>
+            </ul>
+            
+            
+        </div>
+       
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <header>
+                <div class="theme-toggle-container">
+                    <label class="theme-switch">
+                        <input type="checkbox" id="theme-toggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </header>
+
+            <!-- Profit & Sales Tracker -->
+            <div class="profit-tracker">
+                <div id="profit-display"></div>
+
+                <!-- Circle Divs for Sales -->
+                
+                <!-- Chart Display -->
+                <div class="charts-wrapper">
+                    <div class="chart-container">
+                        <canvas id="profitChart"></canvas>
+                    </div>
+                </div>
+
+                <div id="total-sales">
+                    <h2> <span id="total-qty-sales"></span></h2>
+                </div>
+            </div>
+        </div>
+    </div>
+  <div class="controls">
+        <label for="dateSelect">Select Date:</label>
+        <input type="date" id="dateSelect">
+    </div>
+
+    <div class="summary">
+        <p>Selected Date: <span id="selectedDate">-</span></p>
+        <p>Week Number: <span id="weekNumber">-</span></p>
+        <p>Month: <span id="monthName">-</span></p>
+        <p>Total Sales Till Selected Date: <span id="totalSales">-</span></p>
+    </div>
+
+    <div class="sales-container">
+        <div class="chart-wrapper">
+            <canvas id="dailySalesChart"></canvas>
+            <div class="ring-title">Daily</div>
+        </div>
+        <div class="chart-wrapper">
+            <canvas id="weeklySalesChart"></canvas>
+            <div class="ring-title">Weekly</div>
+        </div>
+        <div class="chart-wrapper">
+            <canvas id="monthlySalesChart"></canvas>
+            <div class="ring-title">Monthly</div>
+        </div>
+    </div>
+
+    <!-- Icons at bottom-right -->
+    
+
+    <script>
+        
+       const profitData = {
+    daily: 500,
+    weekly: 3500,
+    monthly: 15000
+};
+
+const salesData = {
+    daily: 150,
+    weekly: 1000,
+    monthly: 5000
+};
+
+const pricePerUnit = 10; // Define price per unit for profit calculation
+let profitChart; // Store chart globally
+
+function createProfitChart(data) {
+    const ctx = document.getElementById('profitChart').getContext('2d');
+    if (profitChart) profitChart.destroy(); // Ensure previous chart is destroyed
+    profitChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Daily', 'Weekly', 'Monthly'],
+            datasets: [{
+                label: 'Profit ($)',
+                data: [data.daily, data.weekly, data.monthly],
+                borderColor: '#3E1C1C',
+                backgroundColor: '#D8C38E',
+                borderWidth: 6,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 12,
+                pointBackgroundColor: '#fff',
+                pointBorderColor: '#3E1C1C'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true },
+                x: { grid: { display: false } }
+            },
+            plugins: { legend: { display: false } }
+        }
+    });
+}
+
+function generateSalesData() {
+    return Math.floor(Math.random() * (100 - 10 + 1)) + 10;
+}
+
+function createSalesChart(chartId, value, maxValue, title) {
+    const ctx = document.getElementById(chartId).getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'doughnut',
+        data: { datasets: [{ data: [value, maxValue - value], backgroundColor: ['#3E1C1C', '#ddd'] }] },
+        options: {
+            cutout: '75%',
+            responsive: true,
+            plugins: { legend: { display: false }, tooltip: { enabled: false } }
+        }
+    });
+    document.querySelector(`#${chartId}`).parentNode.querySelector('.ring-title').innerText = `${title}\n${value} units`;
+    return chart;
+}
+
+let dailySalesChart, weeklySalesChart, monthlySalesChart;
+const today = new Date();
+
+function updateChartsForDate(selectedDate) {
+    if (selectedDate > today) {
+        alert("Cannot select a future date!");
+        return;
+    }
+    document.getElementById('selectedDate').innerText = selectedDate.toISOString().split('T')[0];
+
+    const startOfYear = new Date(selectedDate.getFullYear(), 0, 1);
+    const pastDays = Math.floor((selectedDate - startOfYear) / (24 * 60 * 60 * 1000));
+    const weekNumber = Math.ceil((pastDays + 1) / 7);
+    document.getElementById('weekNumber').innerText = weekNumber;
+    
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    document.getElementById('monthName').innerText = monthNames[selectedDate.getMonth()];
+    
+    const dailySales = generateSalesData();
+    document.getElementById('totalSales').innerText = `${dailySales} units`;
+    const weeklySales = dailySales * (pastDays % 7 + 1); 
+    const monthlySales = dailySales * selectedDate.getDate();
+
+    if (weeklySalesChart) weeklySalesChart.destroy();
+    weeklySalesChart = createSalesChart("weeklySalesChart", weeklySales, 7 * dailySales, "Weekly");
+
+    if (monthlySalesChart) monthlySalesChart.destroy();
+    monthlySalesChart = createSalesChart("monthlySalesChart", monthlySales, 31 * dailySales, "Monthly");
+
+    if (dailySalesChart) dailySalesChart.destroy();
+    dailySalesChart = createSalesChart("dailySalesChart", dailySales, 1000, "Daily");
+
+    const profitData = {
+        daily: dailySales * pricePerUnit,
+        weekly: weeklySales * pricePerUnit,
+        monthly: monthlySales * pricePerUnit
+    };
+    
+    createProfitChart(profitData);
+}
+
+document.getElementById('dateSelect').addEventListener('change', function() {
+    const selectedDate = new Date(this.value);
+    updateChartsForDate(selectedDate);
+});
+
+createProfitChart(profitData);
+        // Theme Toggle Functionality
+        const themeToggle = document.getElementById('theme-toggle');
+
+        themeToggle.addEventListener('change', () => {
+            document.body.classList.toggle('dark-mode');
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart</title>
+  <link rel="stylesheet" href="styles.css"> <!-- Link to your existing CSS -->
+</head>
+<body>
+  <div class="cart-container">
+    <h2>Your Shopping Cart</h2>
+    <div id="cartItems"></div>
+    <div class="cart-footer">
+      <div id="totalPrice">Total: $0.00</div>
+      <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
+    </div>
+  </div>
+
+  <script>
+    function renderCartItems() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const cartItemsContainer = document.getElementById('cartItems');
+      const totalPriceElement = document.getElementById('totalPrice');
+
+      cartItemsContainer.innerHTML = '';
+      let totalPrice = 0;
+
+      if (cart.length === 0) {
+        cartItemsContainer.innerHTML = "<p>Your cart is empty.</p>";
+        totalPriceElement.innerHTML = "Total: $0.00";
+        return;
+      }
+
+      cart.forEach((product, index) => {
+        totalPrice += product.afterPrice;
+
+        const itemHTML = `
+          <div class="cart-item">
+            <div class="cart-item-image" style="background-image: url('${product.imageUrl || 'https://via.placeholder.com/150'}');"></div>
+            <div class="cart-item-details">
+              <p>${product.name}</p>
+              <p>Price: $${product.afterPrice.toFixed(2)}</p>
+            </div>
+            <button class="remove-btn" onclick="removeFromCart(${index})">Remove</button>
+          </div>
+        `;
+        cartItemsContainer.innerHTML += itemHTML;
+      });
+
+      totalPriceElement.innerHTML = `Total: $${totalPrice.toFixed(2)}`;
+    }
+
+    function removeFromCart(index) {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      cart.splice(index, 1);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      renderCartItems();  // Re-render the cart after removing the item
+    }
+
+    function checkout() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      if (cart.length === 0) {
+        alert("Your cart is empty.");
+        return;
+      }
+
+      // Add the checkout logic here, for example, redirect to a checkout page
+      alert("Proceeding to checkout...");
+      // window.location.href = "checkout.html";  // Uncomment and create the checkout page if needed
+    }
+
+    renderCartItems();  // Render cart items when the page loads
+  </script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Management</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="account-management">
+        <h2>Account Management</h2>
+
+        <!-- Profile Section -->
+        <div class="profile">
+            <img id="profile-pic" src="default-profile.png" alt="Profile Picture" width="100" height="100">
+            <input type="file" id="upload-photo" accept="image/*" hidden>
+            <button onclick="document.getElementById('upload-photo').click();">Change Profile Picture</button>
+        </div>
+
+        <!-- User Information -->
+        <div class="user-info">
+            <label>Username: </label>
+            <input type="text" id="username" value="" required>
+        </div>
+
+        <div class="user-info">
+            <label>Email: </label>
+            <input type="text" id="email" value="" disabled>
+        </div>
+
+        <div class="user-info">
+            <label>Phone Number: </label>
+            <input type="text" id="phone" value="" required>
+        </div>
+
+        <div class="user-info">
+            <label>Address: </label>
+            <textarea id="address" required></textarea>
+        </div>
+
+        <div class="user-info">
+            <label>Password: </label>
+            <input type="password" id="password" value="" required>
+            <button onclick="togglePasswordVisibility('password')">Show</button>
+        </div>
+
+        <!-- Buttons -->
+        <button id="save-changes" onclick="saveChanges()">Save Changes</button>
+        <button id="delete-account" onclick="deleteAccount()">Delete Account</button>
+        
+        <button id="logout-btn">Log Out</button>
+    </div>
+
+    <script>
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const loggedInUser = localStorage.getItem('loggedInUser');
+        let currentUser = users.find(user => user.username === loggedInUser);
+
+        if (!currentUser) {
+            window.location.href = "login.html"; // Redirect if not logged in
+        }
+
+        // Populate the form with current user data
+        document.getElementById('profile-pic').src = currentUser.profilePic || 'default-profile.png';
+        document.getElementById('username').value = currentUser.username;
+        document.getElementById('email').value = currentUser.email;
+        document.getElementById('phone').value = currentUser.phone || '';
+        document.getElementById('address').value = currentUser.address || '';
+        document.getElementById('password').value = currentUser.password;
+
+        // Update Profile Picture
+        document.getElementById('upload-photo').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profile-pic').src = e.target.result;
+                    currentUser.profilePic = e.target.result; // Save the base64 image
+                    localStorage.setItem('users', JSON.stringify(users));
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Toggle password visibility
+        function togglePasswordVisibility(passwordId) {
+            const passwordField = document.getElementById(passwordId);
+            const type = passwordField.type === 'password' ? 'text' : 'password';
+            passwordField.type = type;
+        }
+
+        // Save Changes Function
+        function saveChanges() {
+            const updatedUsername = document.getElementById('username').value;
+            const updatedPhone = document.getElementById('phone').value;
+            const updatedAddress = document.getElementById('address').value;
+            const updatedPassword = document.getElementById('password').value;
+
+            if (!updatedUsername || !updatedPhone || !updatedAddress || !updatedPassword) {
+                alert('Please fill in all fields.');
+                return;
+            }
+
+            currentUser.username = updatedUsername;
+            currentUser.phone = updatedPhone;
+            currentUser.address = updatedAddress;
+            currentUser.password = updatedPassword;
+
+            // Save the updated user data back to localStorage
+            localStorage.setItem('users', JSON.stringify(users));
+            alert('Changes saved successfully!');
+        }
+
+        // Delete Account Function
+        function deleteAccount() {
+            const confirmDelete = confirm("Are you sure you want to delete your account?");
+            if (confirmDelete) {
+                const index = users.findIndex(user => user.username === loggedInUser);
+                if (index !== -1) {
+                    users.splice(index, 1); // Remove user from the array
+                    localStorage.setItem('users', JSON.stringify(users));
+                    localStorage.removeItem('loggedInUser'); // Clear logged-in status
+                    alert('Your account has been deleted!');
+                    window.location.href = "login.html"; // Redirect to login page
+                }
+            }
+        }
+
+        // Log Out Function
+        document.getElementById('logout-btn').addEventListener('click', function() {
+            localStorage.removeItem('loggedInUser');
+            window.location.href = "login.html"; // Redirect to login page
+        });
+    </script>
+</body>
+</html>

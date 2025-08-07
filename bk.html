@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Admin Panel</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background: linear-gradient(135deg, #4E2A14, #3B1E0A, #2A1200); /* Rich gradient */
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('IMG_2099.jpeg');
+            background-size: 100% 140%;
+            background-repeat: no-repeat;
+            background-position: center;
+            filter: blur(6px);
+            z-index: -1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: none;
+            color: white;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            border: 1px solid #795548;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background: #311000;
+        }
+
+        button {
+            background: #D7CCC8;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: none;
+            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.5);
+        }
+
+        input, select {
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            border: 1px solid #795548;
+            background: #311000;
+            color: white;
+        }
+
+        .out-of-stock {
+            color: black;
+            font-weight: bold;
+        }
+
+        .animated-shadow {
+            box-shadow: 0px 0px 15px rgba(255, 165, 0, 0.5);
+            animation: glow 1.5s infinite alternate;
+        }
+
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #311000;
+            color:white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+            display: none;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-btn {
+            cursor: pointer;
+            font-size: 18px;
+            color: white;
+            background: none;
+            border: none;
+        }
+
+        .modal.show {
+            display: block;
+        }
+
+        .delete-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #311000;
+            color:white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+            display: none;
+        }
+
+        .delete-modal button {
+            background: #D7CCC8;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .delete-modal button:hover {
+            background: none;
+            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .delete-modal button.cancel {
+            background: #D7CCC8;
+        }
+
+        .delete-modal button.cancel:hover {
+            background: none;
+            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            position:relative;
+            left:-470px;
+        }
+
+        .search-container input {
+            padding: 10px;
+            margin: 5px;
+            width:400px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #795548;
+            background: black;
+            color: white;
+        }
+
+        .search-container button {
+            background: black;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            margin-left: 10px;
+            border-radius: 5px;
+        }
+
+        .search-container button:hover {
+            background: #BCAAA4;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h2 class="animated-shadow">___Product Admin Panel___</h2>
+
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search products..." oninput="searchProducts()">
+        <button onclick="searchProducts()">Search</button>
+    </div>
+
+    <input type="text" id="productName" placeholder="Product Name">
+    <input type="number" id="beforePrice" placeholder="Before Price">
+    <input type="number" id="profit" placeholder="Profit" oninput="calculatePrice()">
+    <input type="number" id="afterPrice" placeholder="After Price" readonly>
+    <input type="number" id="stockQty" placeholder="Stock Quantity">
+    <input type="text" id="size" placeholder="Size">
+    <input type="text" id="imageUrl" placeholder="Image URL">
+    
+    <!-- New input box to add types -->
+    <input type="text" id="newType" placeholder="Add New Product Type">
+    <button onclick="addProductType()">Add Type</button>
+    
+    <!-- Dropdown list for product types -->
+    <select id="productType" placeholder="Product Type">
+        <option value="">Select Product Type</option>
+    </select>
+
+    <button onclick="addProduct()">Add Product</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Product Name</th>
+                <th>Before Price</th>
+                <th>Profit</th>
+                <th>After Price</th>
+                <th>Stock Qty</th>
+                <th>Size</th>
+                <th>Product Type</th>
+                <th>Image</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="productList"></tbody>
+    </table>
+
+    <div id="editBox" class="modal">
+        <div class="modal-header">
+            <h3>Edit Product</h3>
+            <button class="close-btn" onclick="closeEditBox()">✘</button>
+        </div>
+        <input type="text" id="editProductName" placeholder="Product Name">
+        <input type="number" id="editBeforePrice" placeholder="Before Price">
+        <input type="number" id="editProfit" placeholder="Profit" oninput="calculateEditPrice()">
+        <input type="number" id="editAfterPrice" placeholder="After Price" readonly>
+        <input type="number" id="editStockQty" placeholder="Stock Quantity">
+        <input type="text" id="editSize" placeholder="Size">
+        <input type="text" id="editImageUrl" placeholder="Image URL">
+       
+        <select id="editProductType" placeholder="Product Type">
+            <option value="">Select Product Type</option>
+        </select>
+        <button onclick="saveEdit()">Save</button>
+    </div>
+
+    <div id="deleteModal" class="delete-modal">
+        <h3>Are you sure you want to delete this product?</h3>
+        <button class="cancel" onclick="closeDeleteModal()">Cancel</button>
+        <button onclick="confirmDelete()">Delete</button>
+    </div>
+
+    <script>
+    let products = JSON.parse(localStorage.getItem('products')) || [];
+    let productTypes = JSON.parse(localStorage.getItem('productTypes')) || [];
+    let editIndex = null;
+    let deleteIndex = null;
+
+    // Update the dropdown with available product types
+    function updateProductTypes() {
+        const productTypeSelect = document.getElementById('productType');
+        productTypeSelect.innerHTML = "<option value=''>Select Product Type</option>";
+
+        productTypes.forEach(type => {
+            const option = document.createElement('option');
+            option.value = type;
+            option.textContent = type;
+            productTypeSelect.appendChild(option);
+        });
+    }
+
+    function addProductType() {
+        const newType = document.getElementById('newType').value.trim();
+        if (newType && !productTypes.includes(newType)) {
+            productTypes.push(newType);
+            localStorage.setItem('productTypes', JSON.stringify(productTypes));
+            updateProductTypes(); // Update the dropdown with new type
+        }
+        document.getElementById('newType').value = ''; // Clear input box
+    }
+
+    function renderProducts(filteredProducts = null) {
+        const list = document.getElementById('productList');
+        list.innerHTML = "";
+        const productsToRender = filteredProducts || products;
+
+        productsToRender.forEach((product, index) => {
+            const stockStatus = product.stockQty <= 0 ? '<span class="out-of-stock">Out of Stock</span>' : 'In Stock';
+            list.innerHTML += `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${product.name}</td>
+                    <td>$${product.beforePrice}</td>
+                    <td>$${product.profit}</td>
+                    <td>$${product.afterPrice}</td>
+                    <td>${product.stockQty}</td>
+                    <td>${product.size}</td>
+                    <td>${product.productType}</td>
+                    <td><img src="${product.imageUrl}" alt="${product.name}" width="50" height="50"/></td>
+                    <td>${stockStatus}</td>
+                    <td>
+                        <button onclick="editProduct(${index})">Edit</button>
+                        <button onclick="deleteProduct(${index})">Delete</button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    function calculatePrice() {
+        const beforePrice = parseFloat(document.getElementById('beforePrice').value) || 0;
+        const profit = parseFloat(document.getElementById('profit').value) || 0;
+        document.getElementById('afterPrice').value = beforePrice + profit;
+    }
+
+    function calculateEditPrice() {
+        const beforePrice = parseFloat(document.getElementById('editBeforePrice').value) || 0;
+        const profit = parseFloat(document.getElementById('editProfit').value) || 0;
+        document.getElementById('editAfterPrice').value = beforePrice + profit;
+    }
+
+    function addProduct() {
+        const name = document.getElementById('productName').value.trim();
+        const beforePrice = parseFloat(document.getElementById('beforePrice').value) || 0;
+        const profit = parseFloat(document.getElementById('profit').value) || 0;
+        const afterPrice = beforePrice + profit;
+        const stockQty = parseInt(document.getElementById('stockQty').value) || 0;
+        const size = document.getElementById('size').value.trim();
+        const imageUrl = document.getElementById('imageUrl').value.trim();
+        const productType = document.getElementById('productType').value.trim();
+
+        if (name && productType) {
+            products.push({ name, beforePrice, profit, afterPrice, stockQty, size, imageUrl, productType });
+            localStorage.setItem('products', JSON.stringify(products));
+            renderProducts();
+
+            document.getElementById('productName').value = "";
+            document.getElementById('beforePrice').value = "";
+            document.getElementById('profit').value = "";
+            document.getElementById('afterPrice').value = "";
+            document.getElementById('stockQty').value = "";
+            document.getElementById('size').value = "";
+            document.getElementById('imageUrl').value = "";
+            document.getElementById('productType').value = "";
+        }
+    }
+    function editProduct(index) {
+    editIndex = index;
+    const product = products[index];
+
+    // Set input values for the edit box
+    document.getElementById('editProductName').value = product.name;
+    document.getElementById('editBeforePrice').value = product.beforePrice;
+    document.getElementById('editProfit').value = product.profit;
+    document.getElementById('editAfterPrice').value = product.afterPrice;
+    document.getElementById('editStockQty').value = product.stockQty;
+    document.getElementById('editSize').value = product.size;
+    document.getElementById('editImageUrl').value = product.imageUrl;
+
+    // Populate the edit product type dropdown
+    const editProductType = document.getElementById('editProductType');
+    editProductType.innerHTML = "<option value=''>Select Product Type</option>"; // Clear existing options
+
+    productTypes.forEach(type => {
+        const option = document.createElement('option');
+        option.value = type;
+        option.textContent = type;
+
+        // Automatically select the correct product type
+        if (type === product.productType) {
+            option.selected = true;
+        }
+
+        editProductType.appendChild(option);
+    });
+
+    // Show the edit box
+    document.getElementById('editBox').classList.add('show');
+}
+
+function closeEditBox() {
+    document.getElementById('editBox').classList.remove('show');
+}
+
+function saveEdit() {
+    const name = document.getElementById('editProductName').value.trim();
+    const beforePrice = parseFloat(document.getElementById('editBeforePrice').value) || 0;
+    const profit = parseFloat(document.getElementById('editProfit').value) || 0;
+    const afterPrice = beforePrice + profit;
+    const stockQty = parseInt(document.getElementById('editStockQty').value) || 0;
+    const size = document.getElementById('editSize').value.trim();
+    const imageUrl = document.getElementById('editImageUrl').value.trim();
+    const productType = document.getElementById('editProductType').value;
+
+    if (name) {
+        products[editIndex] = { name, beforePrice, profit, afterPrice, stockQty, size, imageUrl, productType };
+        localStorage.setItem('products', JSON.stringify(products));
+        renderProducts();
+        closeEditBox();
+    }
+}
+
+
+    function deleteProduct(index) {
+        deleteIndex = index;
+        document.getElementById('deleteModal').style.display = 'block';
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').style.display = 'none';
+    }
+
+    function confirmDelete() {
+        products.splice(deleteIndex, 1);
+        localStorage.setItem('products', JSON.stringify(products));
+        renderProducts();
+        closeDeleteModal();
+    }
+
+    function searchProducts() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const filteredProducts = products.filter(product => product.name.toLowerCase().includes(searchTerm));
+        renderProducts(filteredProducts);
+    }
+
+    // Initial rendering of products and product types
+    updateProductTypes();
+    renderProducts();
+    </script>
+</body>
+</html>

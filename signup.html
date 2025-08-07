@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dysfunctional | Login Page</title>
+    <!--BOXICONS-->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!--Css-->
+    <link rel="stylesheet" href="acclog.css">
+</head>
+<style>
+
+/* Style for the password toggle icon */
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #000;
+    font-size: 20px;
+    visibility: hidden;  /* Initially hidden until the input is focused */
+}
+
+/* Show the toggle icon when the input is focused */
+.input-field:focus + .password-toggle {
+    visibility: visible;
+}
+
+.custom-toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2ecc71;
+    color: #fff;
+    padding: 15px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.custom-toast i {
+    font-size: 22px;
+}
+
+</style>
+<body>
+    <div class="fullpage">
+        <div class="form-box">
+            <div class="col-1">
+                <div class="image-layer">
+                    <img src="g5.png" class="gear1" alt="gearpic">
+                    <img src="g4.png" class="g gear2" alt="gearpic">
+                    <img src="g3.png" class="g gear3" alt="gearpic">
+                </div>
+                <p class="featured-words"> Here you can upgrade your Machinery shopping skills with <span> XFUNTIONAL </span></p>
+            </div>
+            <div class="col-2">
+                <div class="btn-box">
+                    <button class="btn btn-1" id="Login">Sign In</button>
+                    <button class="btn btn-2" id="Register">Sign Up</button>
+                </div>
+
+                <!-- Login Form -->
+                <div class="login-form">
+                    <div class="form-title">
+                        <span>Sign In</span>
+                    </div>
+                    <div class="form-inputs"> 
+                        <div class="Input-box">
+                            <input type="text" id="login-username" class="input-field" placeholder="Username" required>
+                            <i class="bx bx-user icon"></i>
+                        </div>
+    <!-- Sign In Form -->
+<div class="Input-box">
+    <input type="password" id="login-password" class="input-field" placeholder="Password" required>
+    <i class="" id="show-password-signin"></i>
+</div>
+
+
+
+                        <div class="forgot-pass">
+                            <a href="#">Forgot Password?</a>
+                        </div>
+                        <div class="input-box">
+                            <button class="Input-submit" id="sign-in-button">
+                                <span>Sign In</span>
+                                <i class="bx bx-right-arrow-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Register Form -->
+                <div class="register-form">
+                    <div class="form-title">
+                        <span>Create An Account</span>
+                    </div>
+                    <div class="form-inputs">   
+                        <div class="Input-box">
+                            <input type="text" id="register-email" class="input-field" placeholder="Email" required>
+                            <i class="bx bx-envelope icon"></i>
+                        </div>
+                        <div class="Input-box">
+                            <input type="text" id="register-username" class="input-field" placeholder="Username" required>
+                            <i class="bx bx-user icon"></i>
+                        </div>
+                        <!-- Sign Up and Sign In Forms -->
+<!-- Sign Up Form -->
+<div class="Input-box">
+    <input type="password" id="register-password" class="input-field" placeholder="Password" required>
+    <i class="" id="show-password-signup"></i>
+</div>
+                        <div class="input-box">
+                            <button class="Input-submit" id="sign-up-button">
+                                <span>Sign Up</span>
+                                <i class="bx bx-right-arrow-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+// Mock Data Storage (for demo purposes, can replace with actual server-side storage)
+const users = JSON.parse(localStorage.getItem('users')) || [];
+
+// Switch between forms
+document.getElementById('Login').addEventListener('click', function () {
+    document.querySelector('.login-form').style.display = 'block';
+    document.querySelector('.register-form').style.display = 'none';
+});
+
+document.getElementById('Register').addEventListener('click', function () {
+    document.querySelector('.register-form').style.display = 'block';
+    document.querySelector('.login-form').style.display = 'none';
+});
+
+// Sign Up Functionality with Unique Username Validation
+document.getElementById('sign-up-button').addEventListener('click', function () {
+    const email = document.getElementById('register-email').value;
+    const username = document.getElementById('register-username').value.trim();
+    const password = document.getElementById('register-password').value;
+
+    if (email && username && password) {
+        if (username.length < 4) {
+            alert('Username must be at least 4 characters long.');
+            return;
+        }
+        if (password.length < 8) {
+            alert('Password must be at least 8 characters long.');
+            return;
+        }
+
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+
+        // Check if the username already exists
+        const usernameExists = users.some(user => user.username.toLowerCase() === username.toLowerCase());
+        if (usernameExists) {
+            alert('Username is already taken. Please choose another one.');
+            return;
+        }
+
+        const userId = new Date().getTime(); // Unique user ID
+        const newUser = {
+            userId,
+            email,
+            username,
+            password,
+            profilePic: 'default-profile.png', // Default profile picture
+            phone: '',
+            address: ''
+        };
+
+        // Add the new user to the users array
+        users.push(newUser);
+
+        // Save the updated users array to localStorage
+        localStorage.setItem('users', JSON.stringify(users));
+
+        // Set the new user as the logged-in user
+        localStorage.setItem('loggedInUser', username);
+
+        // Redirect to account management page
+        window.location.href = 'login.html';
+    } else {
+        alert('Please fill all fields.');
+    }
+});
+
+// Sign In Functionality
+document.getElementById('sign-in-button').addEventListener('click', function () {
+    const username = document.getElementById('login-username').value.trim();
+    const password = document.getElementById('login-password').value;
+
+    if (username && password) {
+        const user = users.find(u => u.username === username && u.password === password);
+
+        if (user) {
+            localStorage.setItem('loggedInUser', username);  // Save logged-in user to localStorage
+            showMessageAndRedirect(`Welcome back, ${user.username}!`, 'login.html'); // Redirect to account management
+        } else {
+            alert('Incorrect username or password.');
+        }
+    } else {
+        alert('Please fill all fields.');
+    }
+});
+
+// Toggle password visibility (Show/Hide) for Sign-Up and Sign-In forms
+document.getElementById('show-password-signup').addEventListener('click', function () {
+    togglePasswordVisibility('register-password');
+});
+
+document.getElementById('show-password-signin').addEventListener('click', function () {
+    togglePasswordVisibility('login-password');
+});
+
+// Function to toggle password visibility
+function togglePasswordVisibility(passwordFieldId) {
+    const passwordField = document.getElementById(passwordFieldId);
+    passwordField.type = passwordField.type === 'password' ? 'text' : 'password';
+}
+
+// Function to show a message and then redirect
+function showMessageAndRedirect(message, redirectUrl) {
+    alert(message);
+    window.location.href = redirectUrl;
+}
+// Toggle password visibility for Sign-Up and Sign-In forms
+document.getElementById('show-password-signup').addEventListener('click', function () {
+    togglePasswordVisibility('register-password', this);
+});
+
+document.getElementById('show-password-signin').addEventListener('click', function () {
+    togglePasswordVisibility('login-password', this);
+});
+
+// Function to toggle password visibility
+function togglePasswordVisibility(passwordFieldId, eyeIcon) {
+    const passwordField = document.getElementById(passwordFieldId);
+    
+    if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        eyeIcon.classList.replace('bx-show', 'bx-hide'); // Change icon
+    } else {
+        passwordField.type = 'password';
+        eyeIcon.classList.replace('bx-hide', 'bx-show'); // Change back
+    }
+}
+
+
+const loginBtn = document.querySelector("#Login");
+const registerBtn = document.querySelector("#Register");   
+const loginForm = document.querySelector(".login-form");
+const registerForm = document.querySelector(".register-form");
+
+loginBtn.addEventListener('click', () => 
+{
+    loginBtn.style.backgroundColor = "#f39c12";
+    registerBtn.style.backgroundColor = "rgba(255, 255, 255, 0.2)";
+
+    loginForm.style.left = "50%";
+    registerForm.style.left ="-50%";
+
+    loginForm.style.opacity = 1;
+    registerForm.style.opacity = 0;
+
+    document.querySelector(".col-1").style.borderRadius = "0 30% 20% 0";
+}
+) 
+
+registerBtn.addEventListener('click', () => 
+{
+    loginBtn.style.backgroundColor = "rgba(255, 255, 255, 0.2)";
+    registerBtn.style.backgroundColor = "#f39c12";
+
+    loginForm.style.left = "150%";
+    registerForm.style.left ="50%";
+
+    loginForm.style.opacity = 0;
+    registerForm.style.opacity = 1;
+
+    document.querySelector(".col-1").style.borderRadius = "0 20% 30% 0";
+}
+) 
+// Show and Hide Forms
+document.getElementById('Login').addEventListener('click', function () {
+    document.querySelector('.login-form').style.display = 'block';
+    document.querySelector('.register-form').style.display = 'none';
+    document.querySelector('.forgot-password-form').style.display = 'none';
+});
+
+document.getElementById('Register').addEventListener('click', function () {
+    document.querySelector('.login-form').style.display = 'none';
+    document.querySelector('.register-form').style.display = 'block';
+    document.querySelector('.forgot-password-form').style.display = 'none';
+});
+
+// Forgot Password - Show Reset Form
+document.querySelector('.forgot-pass a').addEventListener('click', function (event) {
+    event.preventDefault();
+    document.querySelector('.login-form').style.display = 'none';
+    document.querySelector('.register-form').style.display = 'none';
+    
+    // Create Forgot Password Form
+    let forgotPasswordHTML = `
+        <div class="forgot-password-form">
+            <div class="form-title">
+                <span>Reset Password</span>
+            </div>
+            <div class="form-inputs">
+                <div class="Input-box">
+                    <input type="text" id="forgot-username" class="input-field" placeholder="Enter Username or Email" required>
+                    <i class="bx bx-user icon"></i>
+                </div>
+                <div class="Input-box">
+                    <input type="password" id="new-password" class="input-field" placeholder="New Password" required>
+                    
+                    <i class="" id="show-password-reset"></i>
+                </div>
+                <div class="input-box">
+                    <button class="Input-submit" id="reset-password-button">
+                        <span>Reset Password</span>
+                        <i class="bx bx-right-arrow-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Insert the Forgot Password Form into the page
+    document.querySelector('.col-2').insertAdjacentHTML('beforeend', forgotPasswordHTML);
+    
+    // Add Event Listener for Reset Button
+    document.getElementById('reset-password-button').addEventListener('click', resetPassword);
+
+    // Show/Hide Password Toggle
+    document.getElementById('show-password-reset').addEventListener('click', function () {
+        togglePasswordVisibility('new-password', this);
+    });
+});
+
+// Reset Password Function
+function resetPassword() {
+    const usernameOrEmail = document.getElementById('forgot-username').value.trim();
+    const newPassword = document.getElementById('new-password').value;
+
+    if (!usernameOrEmail || !newPassword) {
+        alert('Please fill in all fields.');
+        return;
+    }
+
+    if (newPassword.length < 8) {
+        alert('Password must be at least 8 characters long.');
+        return;
+    }
+
+    let users = JSON.parse(localStorage.getItem('users')) || [];
+    let userIndex = users.findIndex(user => user.username === usernameOrEmail || user.email === usernameOrEmail);
+
+    if (userIndex !== -1) {
+        users[userIndex].password = newPassword;
+        localStorage.setItem('users', JSON.stringify(users));
+        alert('Password reset successful! Please sign in.');
+        window.location.reload();
+    } else {
+        alert('User not found! Please check your username or email.');
+    }
+}
+
+// Show/Hide Password Function
+function togglePasswordVisibility(inputId, icon) {
+    let input = document.getElementById(inputId);
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.replace('bx-show', 'bx-hide');
+    } else {
+        input.type = 'password';
+        icon.classList.replace('bx-hide', 'bx-show');
+    }
+}
+
+
+</script> 
+</body>
+</html>
